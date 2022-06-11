@@ -1,4 +1,4 @@
-variable "vpc_cidr_block" {
-    description = "VPC CIDR Block"
+variable "account_id" {
     type = string
+    description = "aws account ID"
 }
