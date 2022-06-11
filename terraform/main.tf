@@ -17,6 +17,6 @@ module "api_backend"{
     ]
 }
 
-# module "s3_bucket"{
-#     source = "./modules/s3_bucket"
-# }
+module "s3_bucket"{
+    source = "./modules/s3_bucket"
+}
