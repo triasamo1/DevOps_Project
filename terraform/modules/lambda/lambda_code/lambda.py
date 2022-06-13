@@ -1,5 +1,6 @@
 import json
 import boto3
+import datetime
 
 def lambda_handler(event, context):
     decodedBody = json.loads(event['body'])
@@ -7,13 +8,6 @@ def lambda_handler(event, context):
     status = True
     message = "JSON saved successfully"
     # Validate json
-    # Check for Date
-    if ("Date" not in decodedBody.keys()):
-        message = "'Date' key is missing from the json"
-        status = False
-    elif (decodedBody["Date"] == ""):
-        message = "'Date' value is missing from the json"
-        status = False
     # Check for Title
     if ("Title" not in decodedBody.keys()):
         message = "'Title' key is missing from the json"
@@ -44,11 +38,23 @@ def lambda_handler(event, context):
         bucket_name = "s3filestorage1106"
         # Save file in a new folder for each day
         file_name = title + ".json"
-        s3_path = decodedBody["Date"] + "/" + file_name
+        current_date = datetime.datetime.today().strftime('%d_%m_%Y')
+        s3_path = current_date + "/" + file_name
 
         # Save received json to S3 bucket
-        s3 = boto3.resource("s3")
-        s3.Bucket(bucket_name).put_object(Key = s3_path, Body = json.dumps(decodedBody))
+        s3_resource = boto3.resource("s3")
+        s3_client = boto3.client("s3")
+        
+        # Check if a file has already been submitted today
+        response = s3_client.list_objects_v2(Bucket="s3filestorage1106")
+        s3_files = response["Contents"]
+        dates_that_exist = [d["Key"].split("/")[0] for d in s3_files]
+        
+        if (current_date in dates_that_exist):
+            message = "Only one file per day is permitted. Try again tomorrow!"
+            status = False
+        else:
+            s3_resource.Bucket(bucket_name).put_object(Key = s3_path, Body = json.dumps(decodedBody))
 
     return {
             "statusCode": 200,
