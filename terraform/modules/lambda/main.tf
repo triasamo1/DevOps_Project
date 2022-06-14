@@ -38,8 +38,9 @@ resource "aws_iam_role" "lambda_execution_role" {
  
 # Attach an iam role policy to lambda function
 resource "aws_iam_role_policy_attachment" "lambda_policy" {
-  role       = aws_iam_role.lambda_execution_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+    role       = aws_iam_role.lambda_execution_role.name
+    count = 2
+    policy_arn = "${var.iam_policy_arn[count.index]}"  #["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole", "arn:aws:iam::aws:policy/AmazonS3FullAccess"]
 }
 
 # Create Cloudwatch logs to monitor the lambda function
