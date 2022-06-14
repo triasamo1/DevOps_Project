@@ -47,12 +47,15 @@ def lambda_handler(event, context):
         
         # Check if a file has already been submitted today
         response = s3_client.list_objects_v2(Bucket="s3filestorage1106")
-        s3_files = response["Contents"]
-        dates_that_exist = [d["Key"].split("/")[0] for d in s3_files]
-        
-        if (current_date in dates_that_exist):
-            message = "Only one file per day is permitted. Try again tomorrow!"
-            status = False
+        if "Contents" in response:
+            s3_files = response["Contents"]
+            dates_that_exist = [d["Key"].split("/")[0] for d in s3_files]
+            
+            if (current_date in dates_that_exist):
+                message = "Only one file per day is permitted. Try again tomorrow!"
+                status = False
+            else:
+                s3_resource.Bucket(bucket_name).put_object(Key = s3_path, Body = json.dumps(decodedBody))
         else:
             s3_resource.Bucket(bucket_name).put_object(Key = s3_path, Body = json.dumps(decodedBody))
 

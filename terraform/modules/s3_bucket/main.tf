@@ -8,3 +8,8 @@ resource "aws_s3_bucket_acl" "s3_bucket_acl" {
     bucket = aws_s3_bucket.s3_bucket.id
     acl    = "public-read-write"
 }
+
+resource "aws_s3_bucket_metric" "s3_bucket_metric" {
+  bucket = aws_s3_bucket.s3_bucket.bucket
+  name   = "EntireBucket"
+}

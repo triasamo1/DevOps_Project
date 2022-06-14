@@ -13,6 +13,11 @@ resource "aws_lambda_function" "lambda" {
     filename = "./modules/lambda/lambda_code.zip"
     source_code_hash = data.archive_file.lambda_code_zip.output_base64sha256
     runtime = "python3.8"
+
+    # vpc_config {
+    #     subnet_ids = [var.subnet_id]
+    #     security_group_ids = [var.security_group_id]
+    # }
 }
 
 # Create an appropriate IAM role to execute lambda
@@ -30,7 +35,7 @@ resource "aws_iam_role" "lambda_execution_role" {
         }]
     })
 }
-
+ 
 # Attach an iam role policy to lambda function
 resource "aws_iam_role_policy_attachment" "lambda_policy" {
   role       = aws_iam_role.lambda_execution_role.name

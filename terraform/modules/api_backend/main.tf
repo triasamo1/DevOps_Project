@@ -26,10 +26,6 @@ resource "aws_api_gateway_usage_plan" "api_usage_plan" {
         api_id = aws_api_gateway_rest_api.api.id
         stage  = aws_api_gateway_stage.api_stage.stage_name
     }
-    quota_settings {
-        limit  = 1
-        period = "DAY"
-    }
 }
 
 # Auto-generate an API Key
@@ -87,4 +83,3 @@ resource "aws_lambda_permission" "api_permission" {
     principal = "apigateway.amazonaws.com"
     source_arn = "arn:aws:execute-api:eu-central-1:${var.account_id}:${aws_api_gateway_rest_api.api.id}/*/${aws_api_gateway_method.api_method.http_method}${aws_api_gateway_resource.api_resource.path}"
 }
-

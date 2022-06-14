@@ -12,3 +12,8 @@ variable "lambda_function_invoke_arn" {
     type = string
     description = "Lambda function invoke ARN "
 }
+
+# variable "vpc_endpoint_id" {
+#     type = string
+#     description = "VPC Endpoint ID"
+# }
