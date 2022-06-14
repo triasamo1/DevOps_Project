@@ -1,6 +1,5 @@
 module "lambda_function"{
     source = "./modules/lambda"
-    iam_policy_arn = var.iam_policy_arn
 }
 
 module "api_backend"{
